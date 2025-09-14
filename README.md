@@ -24,9 +24,8 @@ Managing daily tasks manually often leads to missed deadlines, lost information,
 
 ### Software
 
-- Java JDK 8 or higher  
-- MongoDB Community Edition  
-- MongoDB Java Driver (for connecting Java and MongoDB)  
+- Java JDK 8 or higher   
+- MySQL (for connecting Java and MYSQL)  
 - IDE: Eclipse, IntelliJ IDEA, or VS Code  
 
 ### Hardware
@@ -45,5 +44,3 @@ Managing daily tasks manually often leads to missed deadlines, lost information,
 - **Polymorphism** – Method overloading and overriding in task operations  
 
 ---
-
-

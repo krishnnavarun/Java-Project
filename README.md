@@ -1,48 +1,49 @@
-                                  TASK MANAGEMENT SYSYTEM!
+# Task Management System
 
-Problem Statement:
+A simple Java-based application to efficiently manage daily tasks. This project helps students and professionals add, view, update, delete, and search tasks, ensuring deadlines are met and information is organized.
 
--Managing daily tasks manually often leads to missed deadlines, lost information, and poor organization. Students and professionals need a simple, easy-to-use application to store, update, and track their tasks efficiently.
+---
 
+## Problem Statement
 
-Functional Requirements:
-    -Add new tasks with title, description, due date.
-    -View all tasks stored in the database.
-    -Update task status (e.g., mark as completed).
-    -Delete tasks by ID.
-    -Search tasks by title or status.
+Managing daily tasks manually often leads to missed deadlines, lost information, and poor organization. This system provides an easy-to-use application to store, update, and track tasks efficiently.
 
-Software Needs:
-    -Java JDK 8+
-    -MongoDB Community Edition
-    -MongoDB Java Driver (for connecting Java and MongoDB)
-    -IDE like Eclipse, IntelliJ, or VS Code
+---
 
-Hardware Needs:
-    -Basic PC, 4GB RAM, 500MB storage.
+## Features
 
+- Add new tasks with title, description, and due date  
+- View all tasks stored in the database  
+- Update task status (e.g., mark as completed)  
+- Delete tasks by ID  
+- Search tasks by title or status  
 
-OOPS Concept:
-      -Encapsulation
-      -Inheritance
-      -Abstraction
-      -Polymorphism
+---
 
+## Requirements
 
-Structure:
+### Software
 
-TaskManager/
-│── README.md                  # About the project
-│── lib/                       # MongoDB driver JAR file (if not using Maven)
-│── src/
-│   └── com/taskmanager/
-│       │── Main.java           # Program starts here, menu loop
-│       │
-│       ├── Task.java           # Model class (Task fields + getters/setters)
-│       │
-│       ├── DatabaseConnection.java   # Connects Java to MongoDB
-│       │
-│       ├── TaskDAO.java        # CRUD operations (Add, View, Update, Delete, Search)
-│       │
-│       └── ConsoleUI.java      # Handles user menu & takes input
+- Java JDK 8 or higher  
+- MongoDB Community Edition  
+- MongoDB Java Driver (for connecting Java and MongoDB)  
+- IDE: Eclipse, IntelliJ IDEA, or VS Code  
+
+### Hardware
+
+- Basic PC  
+- 4GB RAM minimum  
+- 500MB storage  
+
+---
+
+## OOP Concepts Used
+
+- **Encapsulation** – Task properties are private with getters and setters  
+- **Inheritance** – Reusable methods through class hierarchy  
+- **Abstraction** – Hiding database connection and CRUD logic  
+- **Polymorphism** – Method overloading and overriding in task operations  
+
+---
+
 

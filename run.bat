@@ -1,19 +1,11 @@
 @echo off
 echo Compiling Java files...
+javac -d bin src/app/*.java src/model/*.java src/service/*.java src/util/*.java
 
-if not exist out (
-    mkdir out
-)
-
-rem Compile all Java files under src recursively
-for /r src %%f in (*.java) do (
-    javac -d out "%%f"
-)
-
-if %errorlevel% neq 0 (
-    echo Compilation failed!
-    exit /b %errorlevel%
+if %ERRORLEVEL% neq 0 (
+    echo Compilation failed.
+    exit /b %ERRORLEVEL%
 )
 
 echo Running program...
-java -cp out util.Main
+java -cp bin app.Main

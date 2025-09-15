@@ -46,4 +46,14 @@ public class Leader extends User {
         }
     }
 
+    private void addTeamMember() {
+        System.out.print("Enter new member username: ");
+        String username = sc.nextLine();
+        System.out.print("Enter password: ");
+        String password = sc.nextLine();
+
+        // Automatically add to MockDB with leader's taskService/reportService
+        MockDB.users.add(new Member(username, password, taskService, reportService));
+        System.out.println("Member " + username + " added successfully!");
+    }
 }

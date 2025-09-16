@@ -11,5 +11,8 @@ public class LogService {
             stmt.setString(1, username);
             stmt.setString(2, action);
             stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

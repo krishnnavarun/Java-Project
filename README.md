@@ -95,3 +95,8 @@ The system sends **alert messages** for:
 This ensures that tasks are always on the radar, improving team efficiency and accountability.
 
 ---
+
+
+## UML DIAGRAM
+
+![image alt](https://github.com/krishnnavarun/Java-Project/blob/06b11336473881f4705bd466e3604cef4f10b8fb/UML%20diagram.png)

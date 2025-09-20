@@ -1,117 +1,93 @@
 package service;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Scanner;
-import java.util.stream.Collectors;
-
 import model.Task;
 import model.User;
 import util.MockDB;
+import java.time.LocalDate;
+import java.util.Scanner;
 
 public class TaskService {
-    private Scanner sc = new Scanner(System.in);
+    private static int idCounter = 1;
 
-    // Create a task
     public void createTask(User user) {
-        System.out.print("Enter title: ");
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter Task Title: ");
         String title = sc.nextLine();
-
-        System.out.print("Enter description: ");
+        System.out.print("Enter Description: ");
         String desc = sc.nextLine();
 
-        System.out.print("Enter deadline (yyyy-mm-dd, optional): ");
-        String deadlineInput = sc.nextLine();
-        LocalDate deadline = deadlineInput.isEmpty() ? null : LocalDate.parse(deadlineInput);
+        String assignee;
 
-        // Leader can assign, member assigns to self
-        String assignee = user.getRole().equalsIgnoreCase("Leader") ? assignUser() : user.getUsername();
+        if(user.getRole().equalsIgnoreCase("Leader")) {
+            assignee = assignUser(); // Leader can choose anyone
+        } else { // Member
+            System.out.println("Assign task to: 1) Myself  2) Another Member");
+            System.out.print("Choose: ");
+            int choice = sc.nextInt(); sc.nextLine();
 
-        int newId = MockDB.tasks.size() + 1;
-        Task task = new Task(newId, title, desc, assignee, deadline, "Pending");
-        MockDB.tasks.add(task);
-
-        System.out.println("Task created successfully!");
-    }
-
-    // Assign task to a member (leader only)
-    private String assignUser() {
-        System.out.println("Available members:");
-        List<User> members = MockDB.users.stream()
-                .filter(u -> u.getRole().equalsIgnoreCase("Member"))
-                .collect(Collectors.toList());
-
-        for (int i = 0; i < members.size(); i++) {
-            System.out.println((i + 1) + ". " + members.get(i).getUsername());
-        }
-
-        System.out.print("Choose assignee: ");
-        int choice = sc.nextInt();
-        sc.nextLine(); // consume newline
-
-        if (choice < 1 || choice > members.size()) {
-            System.out.println("Invalid choice. Assigning task to leader instead.");
-            return "Leader";
-        }
-
-        return members.get(choice - 1).getUsername();
-    }
-
-    // View tasks
-    public void viewTasks(User user) {
-        List<Task> tasksToShow = MockDB.tasks.stream()
-                .filter(t -> user.getRole().equalsIgnoreCase("Leader") || t.getAssignee().equals(user.getUsername()))
-                .collect(Collectors.toList());
-
-        if (tasksToShow.isEmpty()) {
-            System.out.println("No tasks to show.");
-            return;
-        }
-
-        System.out.println("=== Tasks ===");
-        for (Task t : tasksToShow) {
-            System.out.println(t);
-        }
-    }
-
-    // Update tasks
-    public void updateTask(User user) {
-        if (MockDB.tasks.isEmpty()) {
-            System.out.println("No tasks available.");
-            return;
-        }
-
-        viewTasks(user);
-
-        System.out.print("Enter Task ID to update: ");
-        int id = sc.nextInt();
-        sc.nextLine(); // consume newline
-
-        Task taskToUpdate = null;
-        for (Task t : MockDB.tasks) {
-            if (t.getId() == id && (user.getRole().equalsIgnoreCase("Leader") || t.getAssignee().equals(user.getUsername()))) {
-                taskToUpdate = t;
-                break;
+            if(choice == 1) {
+                assignee = user.getUsername(); // Assign to self
+            } else {
+                assignee = assignUser();       // Assign to another member
             }
         }
 
-        if (taskToUpdate == null) {
-            System.out.println("Task not found or you cannot update this task.");
-            return;
+        System.out.print("Enter Deadline (YYYY-MM-DD): ");
+        LocalDate deadline = LocalDate.parse(sc.nextLine());
+
+        Task task = new Task(idCounter++, title, desc, assignee, deadline, "Pending");
+        MockDB.tasks.add(task);
+
+        System.out.println("Task assigned to " + assignee);
+        System.out.println("ALERT: Task '" + title + "' due by " + deadline);
+    }
+
+    private String assignUser() {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter Assignee Username: ");
+        return sc.nextLine();
+    }
+
+    public void viewTasks(User user) {
+        System.out.println("\n=== Task List ===");
+        MockDB.tasks.stream()
+            .filter(t -> user.getRole().equalsIgnoreCase("Leader") || t.getAssignee().equals(user.getUsername()))
+            .forEach(System.out::println);
+    }
+
+    public void updateTask(User user) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter Task ID to update: ");
+        int id = sc.nextInt(); sc.nextLine();
+
+        for(Task t : MockDB.tasks) {
+            if(t.getId() == id && (user.getRole().equalsIgnoreCase("Leader") || t.getAssignee().equals(user.getUsername()))) {
+                System.out.print("New Title: "); t.setTitle(sc.nextLine());
+                System.out.print("New Description: "); t.setDescription(sc.nextLine());
+                System.out.print("New Deadline (YYYY-MM-DD): ");
+                String d = sc.nextLine();
+                if(!d.isEmpty()) t.setDeadline(LocalDate.parse(d));
+
+                System.out.println("Task updated!");
+                System.out.println("ALERT: Task '" + t.getTitle() + "' updated, deadline: " + t.getDeadline());
+                return;
+            }
         }
+        System.out.println("Task not found or access denied.");
+    }
 
-        System.out.print("Enter new title (leave empty to keep current): ");
-        String title = sc.nextLine();
-        if (!title.isEmpty()) taskToUpdate.setTitle(title);
+    public void completeTask(User user) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter Task ID to mark complete: ");
+        int id = sc.nextInt();
 
-        System.out.print("Enter new description (leave empty to keep current): ");
-        String desc = sc.nextLine();
-        if (!desc.isEmpty()) taskToUpdate.setDescription(desc);
-
-        System.out.print("Enter new status (Pending/In Progress/Done, leave empty to keep current): ");
-        String status = sc.nextLine();
-        if (!status.isEmpty()) taskToUpdate.setStatus(status);
-
-        System.out.println("Task updated successfully!");
+        for(Task t : MockDB.tasks) {
+            if(t.getId() == id && t.getAssignee().equals(user.getUsername())) {
+                t.setStatus("Done");
+                System.out.println("✅ Task marked as Done!");
+                return;
+            }
+        }
+        System.out.println("Task not found or cannot complete.");
     }
 }

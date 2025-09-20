@@ -1,5 +1,8 @@
 package model;
 
+/**
+ * Base abstract class for all users.
+ */
 public abstract class User {
     protected String username;
     protected String password;
@@ -12,8 +15,12 @@ public abstract class User {
     }
 
     public String getUsername() { return username; }
-    public String getPassword() { return password; }
     public String getRole() { return role; }
 
+    public boolean checkPassword(String pw) {
+        return this.password.equals(pw);
+    }
+
+    // Each user type implements its own menu
     public abstract void showMenu();
 }

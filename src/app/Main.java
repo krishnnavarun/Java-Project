@@ -1,5 +1,4 @@
 package app;
-
 import model.User;
 import service.TaskService;
 import service.ReportService;
@@ -7,25 +6,34 @@ import service.AuthService;
 import util.MockDB;
 import java.util.Scanner;
 
+//main function
 public class Main {
     public static void main(String[] args) {
-        TaskService taskService = new TaskService();
-        ReportService reportService = new ReportService();
-        MockDB.init(taskService, reportService);
+
+        TaskService ts = new TaskService();
+        ReportService rs = new ReportService();
+        MockDB.init(ts,rs);
 
         Scanner sc = new Scanner(System.in);
-        System.out.println("=== Task Manager ===");
+        System.out.println(" === Task Manager === ");
         System.out.print("Username: "); 
-        String uname = sc.nextLine();
-        System.out.print("Password: "); 
-        String pass = sc.nextLine();
 
-        User currentUser = AuthService.login(uname, pass);
-        if(currentUser != null) {
-            System.out.println("Login successful as " + currentUser.getRole());
-            currentUser.showMenu();
-        } else {
-            System.out.println("Invalid credentials.");
+        String u = sc.nextLine();
+        System.out.print("Password: "); 
+
+        String p = sc.nextLine();
+
+        User me = AuthService.login(u,p);
+
+        if(me != null)
+        {
+            System.out.println("Logged in as " + me.getRole());
+            me.showMenu();
+        }
+        else
+        {
+            System.out.println("Wrong credentials");
         }
     }
 }
+
